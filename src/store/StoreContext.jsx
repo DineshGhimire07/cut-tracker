@@ -13,16 +13,23 @@ export function StoreProvider({ children }) {
   // Initial fetch from Supabase
   useEffect(() => {
     async function loadData() {
+      console.log('Fetching initial data from Supabase...');
       try {
-        // Fetch baseline
-        const { data: baselineData, error: bError } = await supabase
+        // Fetch baseline (using select instead of single to be safer)
+        const { data: bData, error: bError } = await supabase
           .from('app_state')
           .select('data')
-          .eq('id', 'baseline')
-          .single();
+          .eq('id', 'baseline');
+        
+        if (bError) {
+          console.error('Supabase baseline fetch error:', bError);
+        }
 
-        if (baselineData && baselineData.data) {
-          setBaseline(baselineData.data);
+        if (bData && bData.length > 0) {
+          console.log('Baseline loaded:', bData[0].data);
+          setBaseline(bData[0].data);
+        } else {
+          console.log('No baseline found in Supabase, using default.');
         }
 
         // Fetch logs
