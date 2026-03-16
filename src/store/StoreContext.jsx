@@ -20,7 +20,7 @@ export function StoreProvider({ children }) {
           .select('data')
           .eq('id', 'baseline')
           .single();
-        
+
         if (baselineData && baselineData.data) {
           setBaseline(baselineData.data);
         }
@@ -29,7 +29,7 @@ export function StoreProvider({ children }) {
         const { data: logsData, error: lError } = await supabase
           .from('daily_logs')
           .select('id, data');
-          
+
         if (logsData) {
           const parsedLogs = logsData.map(r => r.data).sort((a, b) => a.date.localeCompare(b.date));
           setLogs(parsedLogs);
@@ -52,7 +52,7 @@ export function StoreProvider({ children }) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
+
     // Optimistic UI update
     setLogs(prev => {
       const existing = prev.findIndex(l => l.date === entry.date);
@@ -73,7 +73,7 @@ export function StoreProvider({ children }) {
 
   const updateLog = useCallback(async (date, updates) => {
     let finalUpdatedLog = null;
-    
+
     // Optimistic UI update
     setLogs(prev => prev.map(l => {
       if (l.date !== date) return l;
@@ -98,7 +98,7 @@ export function StoreProvider({ children }) {
   const updateBaseline = useCallback(async (updates) => {
     const newBaseline = { ...baseline, ...updates };
     setBaseline(newBaseline);
-    
+
     await supabase
       .from('app_state')
       .upsert({ id: 'baseline', data: newBaseline });
