@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import { supabase } from '../lib/supabase';
 import { DEFAULT_BASELINE } from '../data/constants';
 import { calcAdherence, calcDataQuality } from '../utils/scoring';
+import { getLocalDateString } from '../utils/formatters';
 
 const StoreContext = createContext(null);
 
@@ -116,7 +117,7 @@ export function StoreProvider({ children }) {
   }, [logs]);
 
   const getTodayLog = useCallback(() => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
     return getLogByDate(today);
   }, [getLogByDate]);
 

@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { WORKOUT_TYPES, DIGESTION_OPTIONS } from '../data/constants';
 import { Save, Check } from 'lucide-react';
+import { getLocalDateString } from '../utils/formatters';
 
 export default function DailyCheckIn() {
   const { baseline, addLog, getLogByDate } = useStore();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
   const existingLog = getLogByDate(today);
 
   const [saved, setSaved] = useState(false);
